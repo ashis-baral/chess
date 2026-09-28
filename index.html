@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f5f2">
+    <meta name="description" content="A polished, responsive chess game. Play a full game against the computer.">
+    <title>Chess — Play against the computer</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="./src/style.css">
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Chess home">
+          <span class="brand-mark" aria-hidden="true">♞</span>
+          <span>chess<span class="brand-dot">.</span></span>
+        </a>
+        <div class="topbar-actions">
+          <span class="online-label"><span class="online-dot"></span> PLAYING LOCALLY</span>
+          <button class="icon-button theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.4A8.5 8.5 0 0 1 8.6 3.8 8.5 8.5 0 1 0 20.2 15.4Z"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">YOUR NEXT MOVE</p>
+          <h1>A little friendly <span>competition.</span></h1>
+        </div>
+        <p class="heading-note">No clock. No pressure. Just chess.</p>
+      </section>
+
+      <section class="game-layout" aria-label="Chess game">
+        <div class="board-column">
+          <div class="player-card opponent-card">
+            <div class="player-identity">
+              <div class="avatar computer-avatar" aria-hidden="true">♟</div>
+              <div><div class="player-name">Computer <span class="you-label">OPPONENT</span></div><div class="player-detail" id="computer-detail">Ready when you are</div></div>
+            </div>
+            <div class="captured-list" id="computer-captured" aria-label="Pieces captured by computer"></div>
+          </div>
+
+          <div class="board-frame">
+            <div class="board" id="board" role="grid" aria-label="Chess board"></div>
+          </div>
+
+          <div class="player-card user-card">
+            <div class="player-identity">
+              <div class="avatar user-avatar" aria-hidden="true">♟</div>
+              <div><div class="player-name">You <span class="you-label">WHITE</span></div><div class="player-detail" id="user-detail">Your turn — make a move</div></div>
+            </div>
+            <div class="captured-list" id="user-captured" aria-label="Pieces captured by you"></div>
+          </div>
+        </div>
+
+        <aside class="game-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">THE GAME</p>
+              <h2>Let’s play.</h2>
+            </div>
+            <span class="turn-indicator" id="turn-indicator"><span></span> YOUR TURN</span>
+          </div>
+
+          <label class="field-label" for="difficulty">DIFFICULTY</label>
+          <div class="select-wrap">
+            <select id="difficulty" aria-label="Computer difficulty">
+              <option value="easy">Easy <span>·</span> learning the ropes</option>
+              <option value="medium" selected>Medium <span>·</span> a worthy match</option>
+              <option value="hard">Hard <span>·</span> bring your best</option>
+            </select>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"></path></svg>
+          </div>
+
+          <label class="field-label color-label">PLAY AS</label>
+          <div class="color-picker" role="group" aria-label="Choose your color">
+            <button type="button" class="color-choice active" data-color="w" aria-pressed="true"><span class="color-piece white-piece">♙</span> White</button>
+            <button type="button" class="color-choice" data-color="b" aria-pressed="false"><span class="color-piece black-piece">♟</span> Black</button>
+          </div>
+
+          <div class="panel-divider"></div>
+          <div class="history-heading">
+            <div><p class="eyebrow">THE STORY SO FAR</p><h3>Move history</h3></div>
+            <span class="move-count" id="move-count">0 moves</span>
+          </div>
+          <div class="move-history" id="move-history" aria-live="polite"><div class="empty-history"><span>♘</span><p>Your first move is waiting.</p></div></div>
+
+          <div class="panel-divider controls-divider"></div>
+          <div class="game-controls">
+            <button class="control-button" id="undo-button" type="button" aria-label="Undo last turn" title="Undo last turn" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-2"></path></svg>
+              <span>Undo</span>
+            </button>
+            <button class="control-button" id="redo-button" type="button" aria-label="Redo turn" title="Redo turn" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"></path><path d="M20 9H10a6 6 0 0 0 0 12h2"></path></svg>
+              <span>Redo</span>
+            </button>
+            <button class="control-button" id="flip-button" type="button" aria-label="Flip board">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18M3 17h18"></path><path d="m7 3-4 4 4 4m10 2 4 4-4 4"></path></svg>
+              <span>Flip</span>
+            </button>
+          </div>
+          <div class="primary-controls">
+            <button class="new-game-button" id="new-game-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"></path><path d="M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2"></path></svg>
+              New game
+            </button>
+            <button class="restart-button" id="restart-button" type="button" aria-label="Restart game" title="Restart game">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5 7l1 13h12l1-13M9 7V4h6v3"></path></svg>
+            </button>
+          </div>
+          <p class="panel-footnote"><span>✦</span> A good move is its own reward.</p>
+        </aside>
+      </section>
+      <footer class="page-footer"><span>Made for the love of the game</span><span>♞ &nbsp;Take your time.</span></footer>
+    </main>
+
+    <dialog class="promotion-dialog" id="promotion-dialog" aria-labelledby="promotion-title">
+      <form method="dialog">
+        <p class="eyebrow">A PAWN HAS REACHED THE END</p>
+        <h2 id="promotion-title">Choose your promotion</h2>
+        <div class="promotion-choices">
+          <button value="q" type="submit" aria-label="Promote to queen"></button>
+          <button value="r" type="submit" aria-label="Promote to rook"></button>
+          <button value="b" type="submit" aria-label="Promote to bishop"></button>
+          <button value="n" type="submit" aria-label="Promote to knight"></button>
+        </div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
