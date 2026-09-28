@@ -20,6 +20,7 @@ let aiTimer;
 
 const $ = (selector) => document.querySelector(selector);
 const boardElement = $("#board");
+const boardColumnElement = $(".board-column");
 const historyElement = $("#move-history");
 const difficultyElement = $("#difficulty");
 
@@ -29,6 +30,8 @@ function isGameOver() {
 
 function renderBoard() {
   boardElement.replaceChildren();
+  boardColumnElement.classList.toggle("flipped", flipped);
+  $("#flip-button").setAttribute("aria-pressed", String(flipped));
   const rankOrder = flipped ? [1, 2, 3, 4, 5, 6, 7, 8] : [8, 7, 6, 5, 4, 3, 2, 1];
   const fileOrder = flipped ? [...files].reverse() : [...files];
   const checkedKing = game.isCheck() ? game.board().flat().find((piece) => piece?.type === "k" && piece.color === game.turn()) : null;
@@ -63,7 +66,7 @@ function renderBoard() {
       boardElement.append(square);
     });
   });
-  boardElement.setAttribute("aria-label", `${flipped ? "Flipped" : "Standard"} chess board`);
+  boardElement.setAttribute("aria-label", `${flipped ? "Black" : "White"} at the bottom of the chess board`);
 }
 
 function onSquareClick(square) {
@@ -209,6 +212,7 @@ function updateUI() {
   $("#computer-detail").textContent = ended ? "Game finished" : thinking ? "Considering its options…" : game.turn() === playerColor ? "Waiting for your move" : "Making a move…";
   $("#turn-indicator").innerHTML = `<span class="${thinking || game.turn() !== playerColor ? "computer-turn" : ""}"></span> ${ended ? "GAME OVER" : thinking || game.turn() !== playerColor ? "COMPUTER THINKING" : "YOUR TURN"}`;
   $(".user-card .you-label").textContent = playerColor === "w" ? "WHITE" : "BLACK";
+  $(".opponent-card .you-label").textContent = playerColor === "w" ? "BLACK" : "WHITE";
   $(".user-avatar").textContent = PIECES[playerColor].p;
   $(".computer-avatar").textContent = PIECES[playerColor === "w" ? "b" : "w"].p;
   const history = game.history();
