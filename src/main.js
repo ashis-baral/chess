@@ -208,7 +208,7 @@ function updateUI() {
   $("#user-detail").textContent = message;
   $("#computer-detail").textContent = ended ? "Game finished" : thinking ? "Considering its options…" : game.turn() === playerColor ? "Waiting for your move" : "Making a move…";
   $("#turn-indicator").innerHTML = `<span class="${thinking || game.turn() !== playerColor ? "computer-turn" : ""}"></span> ${ended ? "GAME OVER" : thinking || game.turn() !== playerColor ? "COMPUTER THINKING" : "YOUR TURN"}`;
-  $(".you-label").textContent = playerColor === "w" ? "WHITE" : "BLACK";
+  $(".user-card .you-label").textContent = playerColor === "w" ? "WHITE" : "BLACK";
   $(".user-avatar").textContent = PIECES[playerColor].p;
   $(".computer-avatar").textContent = PIECES[playerColor === "w" ? "b" : "w"].p;
   const history = game.history();
