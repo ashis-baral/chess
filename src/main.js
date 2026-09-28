@@ -28,6 +28,14 @@ function isGameOver() {
   return game.isGameOver();
 }
 
+function getComputerColor() {
+  return playerColor === "w" ? "b" : "w";
+}
+
+function getColorName(color) {
+  return color === "w" ? "White" : "Black";
+}
+
 function renderBoard() {
   boardElement.replaceChildren();
   boardColumnElement.classList.toggle("flipped", flipped);
@@ -128,7 +136,7 @@ function chooseComputerMove() {
   const depth = level === "hard" ? 3 : 2;
   let bestScore = -Infinity;
   let bestMoves = [];
-  const computerColor = playerColor === "w" ? "b" : "w";
+  const computerColor = getComputerColor();
   for (const move of shuffle(moves)) {
     game.move(move);
     const score = minimax(depth - 1, -Infinity, Infinity, false, computerColor);
@@ -197,9 +205,9 @@ function getGameMessage() {
   if (game.isThreefoldRepetition()) return "Draw by threefold repetition";
   if (game.isInsufficientMaterial()) return "Draw — insufficient material";
   if (game.isDraw()) return "Draw — the 50-move rule";
-  if (thinking) return "Thinking through a move…";
-  if (game.isCheck()) return game.turn() === playerColor ? "You’re in check!" : "Computer is in check";
-  return game.turn() === playerColor ? "Your turn — make a move" : "Computer’s turn";
+  const turnColor = getColorName(game.turn());
+  if (game.isCheck()) return game.turn() === playerColor ? `You’re in check! ${turnColor} to move` : `Computer is in check — ${turnColor} to move`;
+  return game.turn() === playerColor ? `Your turn: ${turnColor} to move` : `Computer's turn: ${turnColor} to move`;
 }
 
 function updateUI() {
@@ -211,10 +219,10 @@ function updateUI() {
   $("#user-detail").textContent = message;
   $("#computer-detail").textContent = ended ? "Game finished" : thinking ? "Considering its options…" : game.turn() === playerColor ? "Waiting for your move" : "Making a move…";
   $("#turn-indicator").innerHTML = `<span class="${thinking || game.turn() !== playerColor ? "computer-turn" : ""}"></span> ${ended ? "GAME OVER" : thinking || game.turn() !== playerColor ? "COMPUTER THINKING" : "YOUR TURN"}`;
-  $(".user-card .you-label").textContent = playerColor === "w" ? "WHITE" : "BLACK";
-  $(".opponent-card .you-label").textContent = playerColor === "w" ? "BLACK" : "WHITE";
+  $(".user-card .you-label").textContent = getColorName(playerColor);
+  $(".opponent-card .you-label").textContent = getColorName(getComputerColor());
   $(".user-avatar").textContent = PIECES[playerColor].p;
-  $(".computer-avatar").textContent = PIECES[playerColor === "w" ? "b" : "w"].p;
+  $(".computer-avatar").textContent = PIECES[getComputerColor()].p;
   const history = game.history();
   $("#undo-button").disabled = history.length === 0 || thinking;
   $("#redo-button").disabled = redoLine.length === 0 || thinking;
@@ -244,8 +252,8 @@ function renderCaptured() {
   game.history({ verbose: true }).forEach((move) => {
     if (move.captured) captures[move.color === "w" ? "w" : "b"].push(move.captured);
   });
-  $("#user-captured").textContent = captures[playerColor].map((piece) => PIECES[playerColor === "w" ? "b" : "w"][piece]).join(" ");
-  $("#computer-captured").textContent = captures[playerColor === "w" ? "b" : "w"].map((piece) => PIECES[playerColor][piece]).join(" ");
+  $("#user-captured").textContent = captures[playerColor].map((piece) => PIECES[getComputerColor()][piece]).join(" ");
+  $("#computer-captured").textContent = captures[getComputerColor()].map((piece) => PIECES[playerColor][piece]).join(" ");
 }
 
 function restartGame() {
